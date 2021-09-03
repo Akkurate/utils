@@ -11,12 +11,12 @@ import (
 var LoggingLevel int = 300
 
 const (
-	TraceLevel = 600
-	DebugLevel = 500
-	InfoLevel  = 400
-	WarnLevel  = 300
-	ErrorLevel = 200
-	FatalLevel = 100
+	TraceLevel = 600 // 500 - 599
+	DebugLevel = 500 // 400 - 499
+	InfoLevel  = 400 // 300 - 399
+	WarnLevel  = 300 // 200 - 299
+	ErrorLevel = 200 // 100 - 199
+	FatalLevel = 100 // 0   - 99
 	Everything = 700
 )
 
