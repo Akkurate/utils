@@ -4,7 +4,7 @@ import "github.com/Akkurate/utils/logging"
 
 func main() {
 
-	logging.SetLevel(logging.Everything)
+	logging.SetLevel(logging.LoggingLevel)
 
 	logging.Trace("Hello trace")
 	logging.Debug("Hello Debug")
