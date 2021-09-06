@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"time"
 
 	"gopkg.in/gookit/color.v1"
 )
@@ -179,4 +180,29 @@ func Fatal(msg string, a ...interface{}) {
 	s += color.Sprintf("<gray> at: %v:%v</>\n", fn, line)
 
 	os.Stderr.Write([]byte(s))
+}
+
+// TimeMeasure GoPython
+type TimeMeasure struct {
+	start time.Time
+}
+
+// Print print
+func (t *TimeMeasure) Print(tag string, msg string) {
+	duration := time.Since(t.start)
+	ms := duration.Milliseconds()
+	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", msg, ms, tag, ms)
+}
+
+// GetMilliseconds GetMilliseconds
+func (t *TimeMeasure) GetMilliseconds() int64 {
+	duration := time.Since(t.start)
+	return int64(duration.Milliseconds())
+}
+
+func Measure() *TimeMeasure {
+	x := &TimeMeasure{
+		start: time.Now(),
+	}
+	return x
 }
