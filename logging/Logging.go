@@ -3,6 +3,7 @@ package logging
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"runtime"
 	"time"
 
@@ -21,6 +22,15 @@ const (
 	Everything = 700
 )
 
+func stripText(text string) string {
+
+	//text = strings.ReplaceAll(text, "\n", "\\n")
+	space := regexp.MustCompile(`\s+`)
+	text = space.ReplaceAllString(text, " ")
+
+	return text
+}
+
 // SetLevel set level
 func SetLevel(l int) {
 	LoggingLevel = l
@@ -35,9 +45,9 @@ func Info(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <suc>Info: </>" + msg + "\n")
+		s = color.Sprintf(" <suc>Info: </>" + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf(" <suc>Info: </>"+msg+"\n", a...)
+		s = color.Sprintf(" <suc>Info: </>"+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 }
@@ -50,9 +60,9 @@ func Debug(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <cyan>Debug: </>" + msg + "\n")
+		s = color.Sprintf(" <cyan>Debug: </>" + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf(" <cyan>Debug: </>"+msg+"\n", a...)
+		s = color.Sprintf(" <cyan>Debug: </>"+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 
@@ -65,9 +75,9 @@ func Trace(msg string, a ...interface{}) {
 	}
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <magenta>Trace: </>" + msg + "\n")
+		s = color.Sprintf(" <magenta>Trace: </>" + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf(" <magenta>Trace: </>"+msg+"\n", a...)
+		s = color.Sprintf(" <magenta>Trace: </>"+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 
@@ -86,17 +96,17 @@ func Level(level int, msg string, a ...interface{}) {
 	}
 
 	if level < FatalLevel {
-		Fatal(msg+fmt.Sprintf(" level=%v", level), a...)
+		Fatal(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	} else if level < ErrorLevel {
-		Error(msg+fmt.Sprintf(" level=%v", level), a...)
+		Error(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	} else if level < WarnLevel {
-		Warn(msg+fmt.Sprintf(" level=%v", level), a...)
+		Warn(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	} else if level < InfoLevel {
-		Info(msg+fmt.Sprintf(" level=%v", level), a...)
+		Info(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	} else if level < DebugLevel {
-		Debug(msg+fmt.Sprintf(" level=%v", level), a...)
+		Debug(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	} else if level < TraceLevel {
-		Trace(msg+fmt.Sprintf(" level=%v", level), a...)
+		Trace(msg+fmt.Sprintf(" <gray>level=%v</>", level), a...)
 	}
 
 }
@@ -106,9 +116,9 @@ func Success(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf("    <green>✔</>  " + msg + "\n")
+		s = color.Sprintf("    <green>✔</>  " + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf("    <green>✔</>  "+msg+"\n", a...)
+		s = color.Sprintf("    <green>✔</>  "+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 }
@@ -117,9 +127,9 @@ func Success(msg string, a ...interface{}) {
 func Print(msg string, a ...interface{}) {
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <suc>Info: </>" + msg + "\n")
+		s = color.Sprintf(" <suc>Info: </>" + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf(" <suc>Info: </>"+msg+"\n", a...)
+		s = color.Sprintf(" <suc>Info: </>"+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 }
@@ -135,9 +145,9 @@ func Warn(msg string, a ...interface{}) {
 	}
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <warn>WARN:</> " + msg + "\n")
+		s = color.Sprintf(" <warn>WARN:</> " + stripText(msg) + "\n")
 	} else {
-		s = color.Sprintf(" <warn>WARN:</> "+msg+"\n", a...)
+		s = color.Sprintf(" <warn>WARN:</> "+stripText(msg)+"\n", a...)
 	}
 	os.Stdout.Write([]byte(s))
 }
@@ -152,10 +162,10 @@ func Error(msg string, a ...interface{}) {
 
 	_, fn, line, _ := runtime.Caller(1)
 	if len(a) == 0 {
-		s = color.Sprintf(" <err>Error:</><danger> "+msg+"</>", a...)
+		s = color.Sprintf(" <err>Error:</><danger> "+stripText(msg)+"</>", a...)
 
 	} else {
-		s = color.Sprintf(" <err>Error:</><danger> "+msg+"</>", a...)
+		s = color.Sprintf(" <err>Error:</><danger> "+stripText(msg)+"</>", a...)
 	}
 	s += color.Sprintf("<gray> at: %v:%v</>\n", fn, line)
 
@@ -172,10 +182,10 @@ func Fatal(msg string, a ...interface{}) {
 
 	_, fn, line, _ := runtime.Caller(1)
 	if len(a) == 0 {
-		s = color.Sprintf(" <err>Fatal:</><danger> "+msg+"</>", a...)
+		s = color.Sprintf(" <err>Fatal:</><danger> "+stripText(msg)+"</>", a...)
 
 	} else {
-		s = color.Sprintf(" <err>Fatal:</><danger> "+msg+"</>", a...)
+		s = color.Sprintf(" <err>Fatal:</><danger> "+stripText(msg)+"</>", a...)
 	}
 	s += color.Sprintf("<gray> at: %v:%v</>\n", fn, line)
 
@@ -191,7 +201,7 @@ type TimeMeasure struct {
 func (t *TimeMeasure) Print(tag string, msg string) {
 	duration := time.Since(t.start)
 	ms := duration.Milliseconds()
-	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", msg, ms, tag, ms)
+	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", stripText(msg), ms, tag, ms)
 }
 
 // GetMilliseconds GetMilliseconds

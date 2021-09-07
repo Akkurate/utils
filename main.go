@@ -31,4 +31,8 @@ func main() {
 
 	m.Print("program", "It took")
 
+	logging.Info(`
+	Hello
+	World  oi    moi
+	`)
 }
