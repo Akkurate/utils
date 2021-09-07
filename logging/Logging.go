@@ -196,10 +196,15 @@ type TimeMeasure struct {
 }
 
 // Print print
-func (t *TimeMeasure) Print(tag string, msg string) {
+func (t *TimeMeasure) Print(tag string, msg string, a ...interface{}) int64 {
 	duration := time.Since(t.start)
 	ms := duration.Milliseconds()
+
+	if len(a) > 0 {
+		msg = fmt.Sprintf(msg, a...)
+	}
 	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", msg, ms, tag, ms)
+	return ms
 }
 
 // GetMilliseconds GetMilliseconds
