@@ -32,7 +32,20 @@ func main() {
 	m.Print("program", "It took")
 
 	logging.Info(`
-	Hello
-	World  oi    moi
+	SELECT * FROM data
+	 	WHERE
+	 	"project" = 18 and segment = 'seeddcir-dev'
+	 	AND (
+	 		("startTime" >= '2021-03-20T00:00:00' AND "endTime" <= '2021-03-21T00:00:00')
+	 			OR
+	 		("startTime" <= '2021-03-20T00:00:00' AND "endTime" > '2021-03-21T00:00:00')
+	 			OR
+	 		( "startTime" < '2021-03-21T00:00:00' and "endTime" >= '2021-03-21T00:00:00')
+	 			OR
+	 		( "startTime" < '2021-03-20T00:00:00' and "endTime" >= '2021-03-20T00:00:00')
+	 	)
+	
+	 	ORDER by "startTime" asc
+	 	 tag=timescale
 	`)
 }

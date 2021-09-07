@@ -10,7 +10,7 @@ import (
 	"gopkg.in/gookit/color.v1"
 )
 
-var LoggingLevel int = 300
+var LoggingLevel int = InfoLevel
 
 const (
 	TraceLevel = 600 // 500 - 599
@@ -22,13 +22,11 @@ const (
 	Everything = 700
 )
 
-func stripText(text string) string {
-
-	//text = strings.ReplaceAll(text, "\n", "\\n")
+func prepareOutput(text string) string {
 	space := regexp.MustCompile(`\s+`)
 	text = space.ReplaceAllString(text, " ")
 
-	return text
+	return text + "\n"
 }
 
 // SetLevel set level
@@ -45,11 +43,11 @@ func Info(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <suc>Info: </>" + stripText(msg) + "\n")
+		s = color.Sprintf(" <suc>Info: </>" + msg)
 	} else {
-		s = color.Sprintf(" <suc>Info: </>"+stripText(msg)+"\n", a...)
+		s = color.Sprintf(" <suc>Info: </>"+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 }
 
 // Debug Debug
@@ -60,11 +58,11 @@ func Debug(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <cyan>Debug: </>" + stripText(msg) + "\n")
+		s = color.Sprintf(" <cyan>Debug: </>" + msg)
 	} else {
-		s = color.Sprintf(" <cyan>Debug: </>"+stripText(msg)+"\n", a...)
+		s = color.Sprintf(" <cyan>Debug: </>"+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 
 }
 
@@ -75,11 +73,11 @@ func Trace(msg string, a ...interface{}) {
 	}
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <magenta>Trace: </>" + stripText(msg) + "\n")
+		s = color.Sprintf(" <magenta>Trace: </>" + msg)
 	} else {
-		s = color.Sprintf(" <magenta>Trace: </>"+stripText(msg)+"\n", a...)
+		s = color.Sprintf(" <magenta>Trace: </>"+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 
 }
 
@@ -116,22 +114,22 @@ func Success(msg string, a ...interface{}) {
 
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf("    <green>✔</>  " + stripText(msg) + "\n")
+		s = color.Sprintf("    <green>✔</>  " + msg)
 	} else {
-		s = color.Sprintf("    <green>✔</>  "+stripText(msg)+"\n", a...)
+		s = color.Sprintf("    <green>✔</>  "+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 }
 
 // Print Print
 func Print(msg string, a ...interface{}) {
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <suc>Info: </>" + stripText(msg) + "\n")
+		s = color.Sprintf(" <suc>Info: </>" + msg)
 	} else {
-		s = color.Sprintf(" <suc>Info: </>"+stripText(msg)+"\n", a...)
+		s = color.Sprintf(" <suc>Info: </>"+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 }
 
 func Use(a ...interface{}) {
@@ -145,11 +143,11 @@ func Warn(msg string, a ...interface{}) {
 	}
 	var s string
 	if len(a) == 0 {
-		s = color.Sprintf(" <warn>WARN:</> " + stripText(msg) + "\n")
+		s = color.Sprintf(" <warn>WARN:</> " + msg)
 	} else {
-		s = color.Sprintf(" <warn>WARN:</> "+stripText(msg)+"\n", a...)
+		s = color.Sprintf(" <warn>WARN:</> "+msg, a...)
 	}
-	os.Stdout.Write([]byte(s))
+	os.Stdout.Write([]byte(prepareOutput(s)))
 }
 
 // Error ErrorF
@@ -162,14 +160,14 @@ func Error(msg string, a ...interface{}) {
 
 	_, fn, line, _ := runtime.Caller(1)
 	if len(a) == 0 {
-		s = color.Sprintf(" <err>Error:</><danger> "+stripText(msg)+"</>", a...)
+		s = color.Sprintf(" <err>Error:</><danger> "+msg+"</>", a...)
 
 	} else {
-		s = color.Sprintf(" <err>Error:</><danger> "+stripText(msg)+"</>", a...)
+		s = color.Sprintf(" <err>Error:</><danger> "+msg+"</>", a...)
 	}
-	s += color.Sprintf("<gray> at: %v:%v</>\n", fn, line)
+	s += color.Sprintf("<gray> at: %v:%v</>", fn, line)
 
-	os.Stderr.Write([]byte(s))
+	os.Stderr.Write([]byte(prepareOutput(s)))
 }
 
 // Error ErrorF
@@ -182,14 +180,14 @@ func Fatal(msg string, a ...interface{}) {
 
 	_, fn, line, _ := runtime.Caller(1)
 	if len(a) == 0 {
-		s = color.Sprintf(" <err>Fatal:</><danger> "+stripText(msg)+"</>", a...)
+		s = color.Sprintf(" <err>Fatal:</><danger> "+msg+"</>", a...)
 
 	} else {
-		s = color.Sprintf(" <err>Fatal:</><danger> "+stripText(msg)+"</>", a...)
+		s = color.Sprintf(" <err>Fatal:</><danger> "+msg+"</>", a...)
 	}
-	s += color.Sprintf("<gray> at: %v:%v</>\n", fn, line)
+	s += color.Sprintf("<gray> at: %v:%v</>", fn, line)
 
-	os.Stderr.Write([]byte(s))
+	os.Stderr.Write([]byte(prepareOutput(s)))
 }
 
 // TimeMeasure GoPython
@@ -201,7 +199,7 @@ type TimeMeasure struct {
 func (t *TimeMeasure) Print(tag string, msg string) {
 	duration := time.Since(t.start)
 	ms := duration.Milliseconds()
-	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", stripText(msg), ms, tag, ms)
+	Info("%v <yellow>%vms</> <gray>tag=%v value=%v level=5000</>", msg, ms, tag, ms)
 }
 
 // GetMilliseconds GetMilliseconds
