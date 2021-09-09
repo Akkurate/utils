@@ -147,7 +147,7 @@ func Warn(msg string, a ...interface{}) {
 	} else {
 		s = color.Sprintf(" <warn>WARN:</> "+msg, a...)
 	}
-	os.Stdout.Write([]byte(prepareOutput(s)))
+	os.Stderr.Write([]byte(prepareOutput(s)))
 }
 
 // Error ErrorF
