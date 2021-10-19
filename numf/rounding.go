@@ -76,3 +76,13 @@ func RoundTo(val float64, digits int) float64 {
 	r, _ := strconv.ParseFloat(s, 64)
 	return r
 }
+
+// RoundToNearest rounds <value> to <nearest> value
+func RoundToNearest(value float64, nearest float64) float64 {
+
+	modulo := math.Mod(value, nearest)
+	if modulo >= nearest/2 {
+		return value - modulo + nearest
+	}
+	return value - modulo
+}
