@@ -53,7 +53,7 @@ func FindIndex(slice []int, val int) (int, bool) {
 	return -1, false
 }
 
-// Contains Check if the input slice contains given integer
+// Contains checks if given integer exists in the slice
 func Contains(slice []int, s int) bool {
 	for _, a := range slice {
 		if a == s {
@@ -73,4 +73,30 @@ func FindMissingIndexes(newslice []int, master []int) (idx []int) {
 		}
 	}
 	return idx
+}
+
+// RemoveFrom removes an integer from given index
+func RemoveFrom(slice []int, s int) []int {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+// Insert inserts given value to given index into a slice
+func Insert(slice []int, idx int, val int) []int {
+
+	slice = append(slice, 0)
+	copy(slice[idx+1:], slice[idx:])
+	slice[idx] = val
+	return slice
+
+}
+
+// Remove removes given integer from a slice
+func Remove(slice []int, s int) []int {
+	for i, v := range slice {
+		if v == s {
+			slice = append(slice[:i], slice[i+1:]...)
+			break
+		}
+	}
+	return slice
 }

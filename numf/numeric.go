@@ -45,12 +45,17 @@ func FindIndex(slice []float64, val float64) (int, bool) {
 	return -1, false
 }
 
-// InsertIntoSlice InsertIntoSlice
-func InsertInto(slice []float64, idx int, val float64) []float64 {
+// Insert inserts given value to given index into a slice
+func Insert(slice []float64, idx int, val float64) []float64 {
 
 	slice = append(slice, 0)
 	copy(slice[idx+1:], slice[idx:])
 	slice[idx] = val
 	return slice
 
+}
+
+// RemoveFrom removes an integer from given index
+func RemoveFrom(slice []float64, s int) []float64 {
+	return append(slice[:s], slice[s+1:]...)
 }
