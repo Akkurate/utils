@@ -64,10 +64,10 @@ func DropNan(slice []float64) []float64 {
 	return res[:i]
 }
 
-// Fillna
-// Fills NaN values with a value base on method.
-// method "previous" fills with previous value,method "linear" fills the NaNs with linear interpolation
-// If no previous value found for filling, first valid value can be used by setting prefill=true
+// FillNan
+// Fills NaN values with a value based on <method>.
+// method = "previous" fills with previous value,method = "linear" fills the NaNs with linear interpolation
+// If no previous value found for filling, first valid value can be used by setting prefill = true
 // validTime (higher number than 1) sets the sample's lifetime. If the sample "dies", NaN is written.  This overrides prefill = true -setting
 func FillNan(slice []float64, method string, prefill bool, validTime int) []float64 {
 

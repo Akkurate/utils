@@ -27,7 +27,7 @@ func Delta(ints []int) []int {
 	return res
 }
 
-// Max returns bigger int from two ints
+// Max returns bigger of ints
 func Max(a int, b int) int {
 	if a >= b {
 		return a
@@ -35,7 +35,7 @@ func Max(a int, b int) int {
 	return b
 }
 
-// Min returns smaller int from two ints
+// Min returns smaller of ints
 func Min(a int, b int) int {
 	if a <= b {
 		return a
@@ -43,7 +43,7 @@ func Min(a int, b int) int {
 	return b
 }
 
-// FindIndex finds the index of first occurrence of the given value
+// FindIndex finds the index of first occurrence of the given value.
 func FindIndex(slice []int, val int) (int, bool) {
 	for i, item := range slice {
 		if item == val {
@@ -63,7 +63,7 @@ func Contains(slice []int, s int) bool {
 	return false
 }
 
-// FindMissingIndexes compares <newslice> against <master>. Those numbers' indexes from <master> are collected whic are not found from <newslice>
+// FindMissingIndexes compares <newslice> against <master>. Those numbers' indexes from <master> are collected which are not found from <newslice>
 func FindMissingIndexes(newslice []int, master []int) (idx []int) {
 
 	for i, v := range master {
@@ -99,4 +99,24 @@ func Remove(slice []int, s int) []int {
 		}
 	}
 	return slice
+}
+
+// SliceOf creates a slice of given <size> filled with <value>
+func SliceOf(value int, size int) []int {
+	s := make([]int, size)
+	for i := range s {
+		s[i] = value
+	}
+	return s
+}
+
+// Cumsum calculates cumulative sum slice from given slice
+func Cumsum(slice []int) []int {
+	s := make([]int, len(slice))
+	var previous int
+	for i, v := range slice {
+		s[i] = previous + v
+		previous = s[i]
+	}
+	return s
 }

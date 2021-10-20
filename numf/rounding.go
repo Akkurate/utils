@@ -17,7 +17,7 @@ type Rounded struct {
 }
 
 // RoundPrefix returns the rounded value to given digits and correct prefix (Megas, Kilos etc.)
-// Special case is abs value between 1000....10000 which is not converted to kilos (because I like it like that)
+// Special case is abs value between 1000....10000 which is not converted to kilos (because it looks nice)
 // set prefix to force certain prefix, otherwise the function figures it out on its' own.
 func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded {
 

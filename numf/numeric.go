@@ -59,3 +59,34 @@ func Insert(slice []float64, idx int, val float64) []float64 {
 func RemoveFrom(slice []float64, s int) []float64 {
 	return append(slice[:s], slice[s+1:]...)
 }
+
+// Contains checks if given float64 exists in the slice
+func Contains(slice []float64, s float64) bool {
+	for _, a := range slice {
+		if a == s {
+			return true
+		}
+	}
+	return false
+}
+
+// SliceOf creates a slice of given <size> filled with <value>
+func SliceOf(value float64, size int) []float64 {
+	s := make([]float64, size)
+	for i := range s {
+		s[i] = value
+	}
+	return s
+}
+
+// Cumsum calculates cumulative sum slice from given slice
+func Cumsum(slice []float64) []float64 {
+	s := make([]float64, len(slice))
+	var previous float64
+	for i, v := range slice {
+		s[i] = previous + v
+		previous = s[i]
+	}
+	return s
+}
+
