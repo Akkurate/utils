@@ -104,6 +104,9 @@ func (c *Context) GetQueryString(name string, defaultValue string) string {
 }
 
 func (c *Context) Decode(ptr interface{}) {
+	if r := recover(); r != nil {
+		panic("Problem with decoding JSON body")
+	}
 	err := json.NewDecoder(c.Req.Body).Decode(ptr)
 	if err != nil {
 		panic(err)
