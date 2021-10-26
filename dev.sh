@@ -1,0 +1,1 @@
+onchange -i -k '**/*.go' -- go run main.go

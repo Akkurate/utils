@@ -1,3 +1,8 @@
+# Akkurate utils
+
+## Simple http server
+
+```go
 package main
 
 import (
@@ -29,3 +34,4 @@ func main() {
 	})
 	server.Start(routeMapping)
 }
+```
