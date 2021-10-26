@@ -6,7 +6,7 @@
 package main
 
 import (
-	"github.com/Akkurate/utils/http/apiserver"
+	"github.com/Akkurate/utils/apiserver"
 	"github.com/Akkurate/utils/logging"
 )
 
