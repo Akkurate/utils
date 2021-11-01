@@ -20,3 +20,5 @@ func (t *Timeout) Run(seconds int, callback func()) {
 func (t *Timeout) Release() {
 	t.Released = true
 }
+
+// generate

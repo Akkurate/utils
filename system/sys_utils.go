@@ -3,6 +3,7 @@ package system
 import (
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 
 	"github.com/Akkurate/utils/numf"
@@ -37,4 +38,21 @@ func GetEnvOrDefault(key string, defaultValue string) string {
 		return defaultValue
 	}
 	return value
+}
+
+// isInSlice first argument is the slice, second is the value
+// using reflect to check if the value is in the slice
+// verify that the length of args should be equal to 2
+func isInSlice(args ...interface{}) bool {
+	if len(args) != 2 {
+		return false
+	}
+	slice := reflect.ValueOf(args[0])
+	value := reflect.ValueOf(args[1])
+	for i := 0; i < slice.Len(); i++ {
+		if slice.Index(i).Interface() == value.Interface() {
+			return true
+		}
+	}
+	return false
 }
