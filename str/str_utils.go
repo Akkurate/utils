@@ -88,3 +88,14 @@ func Insert(slice []string, idx int, val string) []string {
 func RemoveFrom(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
+
+func CleanUp(str string) string {
+	// trim str
+	str = strings.TrimSpace(str)
+	// remove extra spaces using regex
+	str = strings.Trim(str, "")
+	//str = regexp.MustCompile(`(\n|\t|)`).ReplaceAllString(str, " ")
+	str = regexp.MustCompile(`(\s+)`).ReplaceAllString(str, " ")
+	return str
+
+}
