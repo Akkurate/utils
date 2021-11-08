@@ -10,15 +10,17 @@ import (
 )
 
 type Rounded struct {
-	Rawvalue float64 // raw value with given digits
+	Rawvalue float64 // raw value with given digits but no prefix
 	Prefix   string  // prefix string
 	Value    float64 // rounded value with given digits and prefix
-	Response string  // response as <Value> <Prefix><unit>
+	Response string  // response string as <Value> <Prefix><unit>
 }
 
-// RoundPrefix returns the rounded value to given digits and correct prefix (Megas, Kilos etc.)
-// Special case is abs value between 1000....10000 which is not converted to kilos (because it looks nice)
+// Returns the rounded value to given digits and correct prefix (M for Megas, k for Kilos etc.)
+// Special case is abs(value) between 1000....10000, which is not converted to kilos (because it looks nicer)
 // set prefix to force certain prefix, otherwise the function figures it out on its' own.
+// These units are excluded from having a prefix
+//  noprefixUnits := []string{"%", "cycles", "years", "°c", "°lon", "°lat", "events", "", " "}
 func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded {
 
 	lowercaseunit := strings.ToLower(unit) // force lowercase
@@ -69,7 +71,7 @@ func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded 
 
 }
 
-//RoundTo rounds the number to given digits
+// Rounds the number to given significant digits.
 func RoundTo(val float64, digits int) float64 {
 
 	s := fmt.Sprintf("%."+strconv.Itoa(digits)+"g", val)
@@ -77,7 +79,7 @@ func RoundTo(val float64, digits int) float64 {
 	return r
 }
 
-// RoundToNearest rounds <value> to <nearest> value
+// Rounds <value> to <nearest> value
 func RoundToNearest(value float64, nearest float64) float64 {
 
 	modulo := math.Mod(value, nearest)

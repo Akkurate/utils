@@ -1,10 +1,14 @@
+/* Helper functions for handling floats.
+ */
 package numf
 
 import (
 	"math"
+
+	"gonum.org/v1/gonum/floats"
 )
 
-// Delta returns the delta between all consecutive floats
+// Returns the delta between all consecutive floats. Returned slice length is one item shorter.
 func Delta(floats []float64) []float64 {
 
 	res := make([]float64, len(floats)-1)
@@ -15,7 +19,7 @@ func Delta(floats []float64) []float64 {
 	return res
 }
 
-// Compare returns maximum and minimum of two floats taking NaNs into account
+// Compares and returns maximum and minimum of two floats taking NaNs into account.
 func Compare(x float64, y float64) (max float64, min float64) {
 	max = math.NaN()
 	min = math.NaN()
@@ -35,7 +39,7 @@ func Compare(x float64, y float64) (max float64, min float64) {
 	return max, min
 }
 
-// FindIndex finds the index of first occurrence of the given value
+// Finds the index of first occurrence of the given value.
 func FindIndex(slice []float64, val float64) (int, bool) {
 	for i, item := range slice {
 		if item == val {
@@ -45,7 +49,7 @@ func FindIndex(slice []float64, val float64) (int, bool) {
 	return -1, false
 }
 
-// Insert inserts given value to given index into a slice
+// Inserts given value to given index into a slice.
 func Insert(slice []float64, idx int, val float64) []float64 {
 
 	slice = append(slice, 0)
@@ -55,12 +59,12 @@ func Insert(slice []float64, idx int, val float64) []float64 {
 
 }
 
-// RemoveFrom removes an integer from given index
+// Removes an integer from given index.
 func RemoveFrom(slice []float64, s int) []float64 {
 	return append(slice[:s], slice[s+1:]...)
 }
 
-// Contains checks if given float64 exists in the slice
+// Checks if given float exists in the slice.
 func Contains(slice []float64, s float64) bool {
 	for _, a := range slice {
 		if a == s {
@@ -70,7 +74,7 @@ func Contains(slice []float64, s float64) bool {
 	return false
 }
 
-// SliceOf creates a slice of given <size> filled with <value>
+// Creates a slice of given size filled with given value.
 func SliceOf(value float64, size int) []float64 {
 	s := make([]float64, size)
 	for i := range s {
@@ -79,7 +83,7 @@ func SliceOf(value float64, size int) []float64 {
 	return s
 }
 
-// Cumsum calculates cumulative sum slice from given slice
+// Calculates a slice of cumulative sum from given slice.
 func Cumsum(slice []float64) []float64 {
 	s := make([]float64, len(slice))
 	var previous float64
@@ -90,3 +94,29 @@ func Cumsum(slice []float64) []float64 {
 	return s
 }
 
+// Returns gaussian kernel smoothed data from input data with given bandwidth.
+func Gaussiansmooth(data []float64, bandwidth float64) []float64 {
+
+	data = DropNan(data)
+	var smoothedvals []float64
+
+	for xpos := 0; xpos < len(data); xpos++ {
+		var kernel []float64
+		for x := 0; x < len(data); x++ {
+			e := ((float64(x - xpos)) * (float64(x - xpos))) / (2 * bandwidth * bandwidth)
+			kernel = append(kernel, math.Exp(-e))
+		}
+		kernelsum := floats.Sum(kernel)
+		for k := 0; k < len(kernel); k++ {
+			kernel[k] = kernel[k] / kernelsum
+		}
+		var sv []float64
+		for i, d := range data {
+			sv = append(sv, d*kernel[i])
+		}
+		smoothedvals = append(smoothedvals, floats.Sum(sv))
+	}
+
+	return smoothedvals
+
+}

@@ -1,6 +1,8 @@
+/* Helper functions for handling integers.
+ */
 package numi
 
-//Unique returns unique ints from given slice of ints
+// Returns unique integers from given slice.
 func Unique(t []int) []int {
 
 	var res []int
@@ -16,7 +18,7 @@ func Unique(t []int) []int {
 	return res
 }
 
-// Delta returns the delta between all consecutive ints
+// Returns the delta between all consecutive ints. Returned slice length is one item shorter.
 func Delta(ints []int) []int {
 
 	res := make([]int, len(ints))
@@ -27,7 +29,7 @@ func Delta(ints []int) []int {
 	return res
 }
 
-// Max returns bigger of ints
+// Returns the larger of given integers.
 func Max(a int, b int) int {
 	if a >= b {
 		return a
@@ -35,7 +37,7 @@ func Max(a int, b int) int {
 	return b
 }
 
-// Min returns smaller of ints
+// Returns the smaller of given integers.
 func Min(a int, b int) int {
 	if a <= b {
 		return a
@@ -43,7 +45,7 @@ func Min(a int, b int) int {
 	return b
 }
 
-// FindIndex finds the index of first occurrence of the given value.
+// Finds the index of first occurrence of the given value and returns the index and a boolean. Boolean is true when index is found, otherwise index = -1.
 func FindIndex(slice []int, val int) (int, bool) {
 	for i, item := range slice {
 		if item == val {
@@ -53,7 +55,7 @@ func FindIndex(slice []int, val int) (int, bool) {
 	return -1, false
 }
 
-// Contains checks if given integer exists in the slice
+// Checks if given integer exists in the slice.
 func Contains(slice []int, s int) bool {
 	for _, a := range slice {
 		if a == s {
@@ -63,10 +65,10 @@ func Contains(slice []int, s int) bool {
 	return false
 }
 
-// FindMissingIndexes compares <newslice> against <master>. Those numbers' indexes from <master> are collected which are not found from <newslice>
-func FindMissingIndexes(newslice []int, master []int) (idx []int) {
+// Compares <newslice> against <slice>. Those numbers' indexes from <slice> are collected which are not found from <newslice>.
+func FindMissingIndexes(newslice []int, slice []int) (idx []int) {
 
-	for i, v := range master {
+	for i, v := range slice {
 		_, b := FindIndex(newslice, v)
 		if !b {
 			idx = append(idx, i)
@@ -90,7 +92,7 @@ func Insert(slice []int, idx int, val int) []int {
 
 }
 
-// Remove removes given integer from a slice
+// Removes first occurence of given integer from a slice.
 func Remove(slice []int, s int) []int {
 	for i, v := range slice {
 		if v == s {
@@ -101,7 +103,7 @@ func Remove(slice []int, s int) []int {
 	return slice
 }
 
-// SliceOf creates a slice of given <size> filled with <value>
+// SliceOf creates a slice of given size filled with value.
 func SliceOf(value int, size int) []int {
 	s := make([]int, size)
 	for i := range s {
@@ -110,7 +112,7 @@ func SliceOf(value int, size int) []int {
 	return s
 }
 
-// Cumsum calculates cumulative sum slice from given slice
+// Calculates a slice of cumulative sum from given slice.
 func Cumsum(slice []int) []int {
 	s := make([]int, len(slice))
 	var previous int

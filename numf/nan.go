@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// IsValid checks whether the given float is a valid number instead of NaN or Inf
+// Checks whether the given float is a valid number instead of NaN or Inf.
 func IsValid(value float64) bool {
 	if math.IsNaN(value) {
 		return false
@@ -16,8 +16,7 @@ func IsValid(value float64) bool {
 	return true
 }
 
-// ReplaceNan
-// If <value> is NaN or Inf, replaces <value> with <replacewith>
+// Replaces given value with a new one, if given value is NaN or Inf.
 func ReplaceNan(value float64, replacewith float64) float64 {
 	if math.IsNaN(value) {
 		return replacewith
@@ -28,7 +27,7 @@ func ReplaceNan(value float64, replacewith float64) float64 {
 	return value
 }
 
-// ReplaceNanSlice Replace NaNs in a slice with given value
+// Replaces all NaNs in a slice with given value.
 func ReplaceNans(values []float64, replacewith float64) []float64 {
 	res := make([]float64, len(values))
 	for i, v := range values {
@@ -41,7 +40,7 @@ func ReplaceNans(values []float64, replacewith float64) []float64 {
 	return res
 }
 
-// NaNSlice Create a slice of NaNs of given size
+// Creates a slice of NaNs of given size.
 func NanSlice(size int) (nanslice []float64) {
 	nanslice = make([]float64, size)
 	for i := range nanslice {
@@ -50,7 +49,7 @@ func NanSlice(size int) (nanslice []float64) {
 	return nanslice
 }
 
-// Dropna drop NaNs from a slice
+// Drops NaNs from a slice.
 func DropNan(slice []float64) []float64 {
 
 	res := make([]float64, len(slice))
@@ -64,11 +63,12 @@ func DropNan(slice []float64) []float64 {
 	return res[:i]
 }
 
-// FillNan
-// Fills NaN values with a value based on <method>.
-// method = "previous" fills with previous value,method = "linear" fills the NaNs with linear interpolation
-// If no previous value found for filling, first valid value can be used by setting prefill = true
-// validTime (higher number than 1) sets the sample's lifetime. If the sample "dies", NaN is written.  This overrides prefill = true -setting
+// Fills NaN values with a value based on given method:
+//  "previous" // fills the NaNs with previous value
+//  "linear"   // fills the NaNs with linear interpolation
+// Filling starts from first valid value, thus leaving any preceding NaNs untouched. By setting prefill = true, first valid value is used to replace also the preceding NaNs.
+//
+// One sample's lifetime can be set by setting validTime value to > 1. Filling is then performed for validTime samples. Using validTime overrides prefill = true -setting
 func FillNan(slice []float64, method string, prefill bool, validTime int) []float64 {
 
 	method = strings.ToLower(method)
