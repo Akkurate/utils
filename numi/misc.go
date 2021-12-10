@@ -5,6 +5,15 @@ import (
 	"math/rand"
 	"time"
 )
+
+// Returns an evenly spaced slice of integers, between <start> and <end> with spacing <step>.
+func NumRange(start int, end int, step int) (numberrange []int) {
+	for x := start; x <= end; x = x + step {
+		numberrange = append(numberrange, x)
+	}
+	return numberrange
+}
+
 // Creates a random integer between min and max value.
 func RandRange(min int, max int) int {
 	rand.Seed(time.Now().UnixNano())

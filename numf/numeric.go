@@ -9,12 +9,12 @@ import (
 )
 
 // Returns the delta between all consecutive floats. Returned slice length is one item shorter.
-func Delta(floats []float64) []float64 {
+func Delta(slice []float64) []float64 {
 
-	res := make([]float64, len(floats)-1)
+	res := make([]float64, len(slice)-1)
 
-	for i := 1; i < len(floats); i++ {
-		res[i-1] = floats[i] - floats[i-1]
+	for i := 1; i < len(slice); i++ {
+		res[i-1] = slice[i] - slice[i-1]
 	}
 	return res
 }
@@ -120,3 +120,16 @@ func Gaussiansmooth(data []float64, bandwidth float64) []float64 {
 	return smoothedvals
 
 }
+
+// Multiplies two slices of same length element-wise.
+func MulSlices(s1, s2 []float64) []float64 {
+	if len(s1) != len(s2) {
+		return nil
+	}
+	res := make([]float64, len(s1))
+	for i, v1 := range s1 {
+		res[i] = v1 * s2[i]
+	}
+	return res
+}
+

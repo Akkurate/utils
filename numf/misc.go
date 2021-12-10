@@ -16,3 +16,12 @@ func SetDefault(defaultval float64, confval float64) float64 {
 	}
 	return confval
 }
+
+// Returns the given values without changes, if condition == FALSE.
+// Returns the values in switched order, if condition == TRUE.
+func SwitchIf(condition bool, i1, i2 float64) (float64, float64) {
+	if condition {
+		return i2, i1
+	}
+	return i1, i2
+}
