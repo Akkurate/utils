@@ -4,8 +4,6 @@ package numf
 
 import (
 	"math"
-
-	"gonum.org/v1/gonum/floats"
 )
 
 // Returns the delta between all consecutive floats. Returned slice length is one item shorter.
@@ -94,33 +92,6 @@ func Cumsum(slice []float64) []float64 {
 	return s
 }
 
-// Returns gaussian kernel smoothed data from input data with given bandwidth.
-func Gaussiansmooth(data []float64, bandwidth float64) []float64 {
-
-	data = DropNan(data)
-	var smoothedvals []float64
-
-	for xpos := 0; xpos < len(data); xpos++ {
-		var kernel []float64
-		for x := 0; x < len(data); x++ {
-			e := ((float64(x - xpos)) * (float64(x - xpos))) / (2 * bandwidth * bandwidth)
-			kernel = append(kernel, math.Exp(-e))
-		}
-		kernelsum := floats.Sum(kernel)
-		for k := 0; k < len(kernel); k++ {
-			kernel[k] = kernel[k] / kernelsum
-		}
-		var sv []float64
-		for i, d := range data {
-			sv = append(sv, d*kernel[i])
-		}
-		smoothedvals = append(smoothedvals, floats.Sum(sv))
-	}
-
-	return smoothedvals
-
-}
-
 // Multiplies two slices of same length element-wise.
 func MulSlices(s1, s2 []float64) []float64 {
 	if len(s1) != len(s2) {
@@ -132,4 +103,3 @@ func MulSlices(s1, s2 []float64) []float64 {
 	}
 	return res
 }
-
