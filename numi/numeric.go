@@ -77,61 +77,30 @@ func FindMissingIndexes(newslice []int, slice []int) (idx []int) {
 	return idx
 }
 
-// RemoveFrom removes an integer from given index and returns the result as a new slice.
+// RemoveFrom removes an integer from given index
 func RemoveFrom(slice []int, s int) []int {
-	c := make([]int, len(slice))
-	copy(c, slice)
-	return append(c[:s], c[s+1:]...)
+	return append(slice[:s], slice[s+1:]...)
 }
 
-// RemoveFromInplace removes an integer from given index in place
-func RemoveFromInplace(slice []int, s int) {
-	slice = append(slice[:s], slice[s+1:]...)
-}
-
-// Inserts given value to given index into a slice and returns the result as a new slice.
+// Insert inserts given value to given index into a slice
 func Insert(slice []int, idx int, val int) []int {
-	c := make([]int, len(slice))
-	copy(c, slice)
-	c = append(c, 0)
-	copy(c[idx+1:], c[idx:])
-	c[idx] = val
-	return c
-
-}
-
-// Inserts given value to given index in place
-func InsertInplace(slice []int, idx int, val int) {
 
 	slice = append(slice, 0)
 	copy(slice[idx+1:], slice[idx:])
 	slice[idx] = val
-
-}
-
-// Removes first occurence of given integer from a slice and returns the result as a new slice.
-func Remove(slice []int, s int) []int {
-	c := make([]int, len(slice))
-	copy(c, slice)
-	for i, v := range c {
-		if v == s {
-			c = append(c[:i], c[i+1:]...)
-			break
-		}
-	}
 	return slice
+
 }
 
-// Removes first occurence of given integer from a slice in place
-func RemoveInplace(slice []int, s int) {
-
+// Removes first occurence of given integer from a slice.
+func Remove(slice []int, s int) []int {
 	for i, v := range slice {
 		if v == s {
 			slice = append(slice[:i], slice[i+1:]...)
 			break
 		}
 	}
-
+	return slice
 }
 
 // SliceOf creates a slice of given size filled with value.
@@ -152,4 +121,15 @@ func Cumsum(slice []int) []int {
 		previous = s[i]
 	}
 	return s
+}
+
+// Finds the difference in elements between slice A and slice B ; ie. A-B
+func Diff(a, b []int) []int {
+	var res []int
+	for _, v := range b {
+		if !Contains(a, v) {
+			res = append(res, v)
+		}
+	}
+	return res
 }
