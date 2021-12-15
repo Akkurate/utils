@@ -20,8 +20,8 @@ type XY struct {
 	Error string   // Error string -- cleared when new function call is made to XYdata object
 }
 
-// Creates new XYdata object
-func newXYdata(x, y []float64) *XY {
+// Creates new XY object
+func NewXY(x, y []float64) *XY {
 
 	if len(x) != len(y) {
 		xyd := &XY{Error: "Mismatch in input data length"}
@@ -92,6 +92,7 @@ func (xy *XY) RemoveXY(i int) {
 	xy.data = append(xy.data[:i], xy.data[i+1:]...)
 
 }
+
 // Sorts the X values as ascending or descending and returns a sorted index.
 func (xy *XY) SortX(ascending bool) []int {
 	xy.Error = ""
@@ -111,6 +112,7 @@ func (xy *XY) SortX(ascending bool) []int {
 	}
 	return sortedIndex
 }
+
 // Sorts the Y values as ascending or descending and returns a sorted index.
 func (xy *XY) SortY(ascending bool) []int {
 	xy.Error = ""
@@ -130,6 +132,7 @@ func (xy *XY) SortY(ascending bool) []int {
 	}
 	return sortedIndex
 }
+
 // Sorts the index ascending or descending and returns a sorted index.
 func (xy *XY) SortI(ascending bool) []int {
 	xy.Error = ""
@@ -140,21 +143,25 @@ func (xy *XY) SortI(ascending bool) []int {
 	sort.Slice(index, func(i, j int) bool { return index[j] < index[i] })
 	return index
 }
+
 // Returns X and Y from given index
 func (xy *XY) GetXY(i int) (x, y float64) {
 	xy.Error = ""
 	return xy.data[i].x, xy.data[i].y
 }
+
 // Returns X from given index
 func (xy *XY) GetX(i int) (x float64) {
 	xy.Error = ""
 	return xy.data[i].x
 }
+
 // Returns Y from given index
 func (xy *XY) GetY(i int) (y float64) {
 	xy.Error = ""
 	return xy.data[i].y
 }
+
 // Finds the index of given X and/or Y value(s). Index is gone through in ascending order and the first match is returned.
 // Use math.NaN() to disable matching.
 func (xy *XY) GetI(x, y float64) int {
@@ -175,6 +182,7 @@ func (xy *XY) GetI(x, y float64) int {
 	}
 	return -1
 }
+
 // Returns a view of X data in ascending index order.
 func (xy *XY) ViewX() *[]float64 {
 	xy.Error = ""
@@ -184,6 +192,7 @@ func (xy *XY) ViewX() *[]float64 {
 	}
 	return &view
 }
+
 // Returns a view of Y data in ascending index order.
 func (xy *XY) ViewY() *[]float64 {
 	xy.Error = ""
