@@ -84,7 +84,12 @@ func RemoveFrom(slice []int, s int) []int {
 	return append(c[:s], c[s+1:]...)
 }
 
-// Insert inserts given value to given index into a slice and returns the result as a new slice.
+// RemoveFromInplace removes an integer from given index in place
+func RemoveFromInplace(slice []int, s int) {
+	slice = append(slice[:s], slice[s+1:]...)
+}
+
+// Inserts given value to given index into a slice and returns the result as a new slice.
 func Insert(slice []int, idx int, val int) []int {
 	c := make([]int, len(slice))
 	copy(c, slice)
@@ -92,6 +97,15 @@ func Insert(slice []int, idx int, val int) []int {
 	copy(c[idx+1:], c[idx:])
 	c[idx] = val
 	return c
+
+}
+
+// Inserts given value to given index in place
+func InsertInplace(slice []int, idx int, val int) {
+
+	slice = append(slice, 0)
+	copy(slice[idx+1:], slice[idx:])
+	slice[idx] = val
 
 }
 
@@ -106,6 +120,18 @@ func Remove(slice []int, s int) []int {
 		}
 	}
 	return slice
+}
+
+// Removes first occurence of given integer from a slice in place
+func RemoveInplace(slice []int, s int) {
+
+	for i, v := range slice {
+		if v == s {
+			slice = append(slice[:i], slice[i+1:]...)
+			break
+		}
+	}
+
 }
 
 // SliceOf creates a slice of given size filled with value.

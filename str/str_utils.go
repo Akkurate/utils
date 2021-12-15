@@ -78,6 +78,18 @@ func Remove(slice []string, s string) []string {
 	return slice
 }
 
+// Removes the first occurence of given string in place
+func RemoveInplace(slice []string, s string) {
+
+	for i, v := range slice {
+		if v == s {
+			slice = append(slice[:i], slice[i+1:]...)
+			break
+		}
+	}
+
+}
+
 // Inserts given string to given index into a slice and returns the result as new slice
 func Insert(slice []string, idx int, val string) []string {
 	c := make([]string, len(slice))
@@ -89,11 +101,26 @@ func Insert(slice []string, idx int, val string) []string {
 
 }
 
+// Inserts given string to given index in place
+func InsertInplaec(slice []string, idx int, val string) {
+
+	slice = append(slice, "")
+	copy(slice[idx+1:], slice[idx:])
+	slice[idx] = val
+
+}
+
 // Removes a string from given index and returns the result as new slice
 func RemoveFrom(slice []string, s int) []string {
 	c := make([]string, len(slice))
 	copy(c, slice)
 	return append(c[:s], c[s+1:]...)
+}
+
+// Removes a string from given index in place
+func RemoveFromInplace(slice []string, s int) {
+
+	slice = append(slice[:s], slice[s+1:]...)
 }
 
 func CleanUp(str string) string {
