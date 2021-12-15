@@ -47,19 +47,22 @@ func FindIndex(slice []float64, val float64) (int, bool) {
 	return -1, false
 }
 
-// Inserts given value to given index into a slice.
+// Inserts given value to given index into a slice and returns the result as new slice
 func Insert(slice []float64, idx int, val float64) []float64 {
-
-	slice = append(slice, 0)
-	copy(slice[idx+1:], slice[idx:])
-	slice[idx] = val
-	return slice
+	c := make([]float64, len(slice))
+	copy(c, slice)
+	c = append(c, 0)
+	copy(c[idx+1:], c[idx:])
+	c[idx] = val
+	return c
 
 }
 
-// Removes an integer from given index.
+// Removes an integer from given index and returns the result as new slice
 func RemoveFrom(slice []float64, s int) []float64 {
-	return append(slice[:s], slice[s+1:]...)
+	c := make([]float64, len(slice))
+	copy(c, slice)
+	return append(c[:s], c[s+1:]...)
 }
 
 // Checks if given float exists in the slice.

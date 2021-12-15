@@ -65,30 +65,35 @@ func ContainsIgnorecase(slice []string, s string) bool {
 	return false
 }
 
-// Removes the first occurence of given string from a slice.
+// Removes the first occurence of given string from a slice and returns the result as new slice
 func Remove(slice []string, s string) []string {
-	for i, v := range slice {
+	c := make([]string, len(slice))
+	copy(c, slice)
+	for i, v := range c {
 		if v == s {
-			slice = append(slice[:i], slice[i+1:]...)
+			c = append(c[:i], c[i+1:]...)
 			break
 		}
 	}
 	return slice
 }
 
-// Inserts given string to given index into a slice.
+// Inserts given string to given index into a slice and returns the result as new slice
 func Insert(slice []string, idx int, val string) []string {
-
-	slice = append(slice, "")
-	copy(slice[idx+1:], slice[idx:])
-	slice[idx] = val
-	return slice
+	c := make([]string, len(slice))
+	copy(c, slice)
+	c = append(c, "")
+	copy(c[idx+1:], c[idx:])
+	c[idx] = val
+	return c
 
 }
 
-// Removes a string from given index.
+// Removes a string from given index and returns the result as new slice
 func RemoveFrom(slice []string, s int) []string {
-	return append(slice[:s], slice[s+1:]...)
+	c := make([]string, len(slice))
+	copy(c, slice)
+	return append(c[:s], c[s+1:]...)
 }
 
 func CleanUp(str string) string {
