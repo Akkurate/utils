@@ -18,20 +18,17 @@ func IsValid(value float64) bool {
 
 // Replaces given value with a new one, if given value is NaN or Inf.
 func ReplaceNan(value float64, replacewith float64) float64 {
-	if math.IsNaN(value) {
-		return replacewith
+	if IsValid(value) {
+		return value
 	}
-	if math.IsInf(value, 0) {
-		return replacewith
-	}
-	return value
+	return replacewith
 }
 
 // Replaces all NaNs in a slice with given value.
 func ReplaceNans(values []float64, replacewith float64) []float64 {
 	res := make([]float64, len(values))
 	for i, v := range values {
-		if math.IsNaN(v) {
+		if !IsValid(v) {
 			res[i] = replacewith
 		} else {
 			res[i] = v
@@ -55,7 +52,7 @@ func DropNan(slice []float64) []float64 {
 	res := make([]float64, len(slice))
 	i := 0
 	for _, v := range slice {
-		if !math.IsNaN(v) {
+		if IsValid(v) {
 			res[i] = v
 			i++
 		}
@@ -127,6 +124,8 @@ func FillNan(slice []float64, method string, prefill bool, validTime int) []floa
 			}
 		}
 		res = FillNan(linearresult, "previous", prefill, validTime)
+	default:
+		return res
 
 	}
 	if validTime > 1 {

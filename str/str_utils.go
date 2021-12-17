@@ -100,3 +100,11 @@ func CleanUp(str string) string {
 	return str
 
 }
+// Returns the given values without changes, if condition == FALSE.
+// Returns the values in switched order, if condition == TRUE.
+func SwitchIf(condition bool, i1, i2 string) (string, string) {
+	if condition {
+		return i2, i1
+	}
+	return i1, i2
+}

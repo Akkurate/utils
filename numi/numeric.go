@@ -20,8 +20,10 @@ func Unique(t []int) []int {
 
 // Returns the delta between all consecutive ints. Returned slice length is one item shorter.
 func Delta(ints []int) []int {
-
-	res := make([]int, len(ints))
+	if len(ints) < 2 {
+		return nil
+	}
+	res := make([]int, len(ints)-1)
 
 	for i := 1; i < len(ints); i++ {
 		res[i-1] = ints[i] - ints[i-1]

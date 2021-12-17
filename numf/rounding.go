@@ -31,16 +31,16 @@ func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded 
 
 	// initialize response
 	resp := Rounded{
-		Prefix:   prefix,
 		Rawvalue: RoundTo(v, digits),
 	}
-
+	setprefix := true
 	// no prefix if noprefixUnit given
 	if str.Contains(noprefixUnits, lowercaseunit) {
-		prefix = "-"
+		setprefix = false
+		resp.Prefix = ""
 	}
 
-	if prefix != "-" {
+	if setprefix {
 		prefixpos, _ := str.FindIndex(prefixes, prefix)
 		if prefixpos >= 0 {
 			resp.Value = RoundTo(v/powers[prefixpos], digits)

@@ -8,7 +8,9 @@ import (
 
 // Returns the delta between all consecutive floats. Returned slice length is one item shorter.
 func Delta(slice []float64) []float64 {
-
+	if len(slice) < 2 {
+		return nil
+	}
 	res := make([]float64, len(slice)-1)
 
 	for i := 1; i < len(slice); i++ {
@@ -57,7 +59,7 @@ func Insert(slice []float64, idx int, val float64) []float64 {
 
 }
 
-// Removes an integer from given index and returns the result as new slice
+// Removes an integer from given index
 func RemoveFrom(slice []float64, s int) []float64 {
 	return append(slice[:s], slice[s+1:]...)
 }
@@ -74,6 +76,9 @@ func Contains(slice []float64, s float64) bool {
 
 // Creates a slice of given size filled with given value.
 func SliceOf(value float64, size int) []float64 {
+	if size <= 0 {
+		return nil
+	}
 	s := make([]float64, size)
 	for i := range s {
 		s[i] = value

@@ -31,7 +31,7 @@ func StringToInt(s string) int {
 	return i
 }
 
-// Converts float64 to int. Returns NaN if error detected.
+// Converts string to float64. Returns NaN if error detected.
 func StringToFloat64(s string) float64 {
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
@@ -40,7 +40,7 @@ func StringToFloat64(s string) float64 {
 	return f
 }
 
-// Converts any input type to string represanttion.
+// Converts any input type to string representation.
 func Use(v interface{}) string {
 	return fmt.Sprintf("%v", v)
 }

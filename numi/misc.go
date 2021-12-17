@@ -8,6 +8,9 @@ import (
 
 // Returns an evenly spaced slice of integers, between <start> and <end> with spacing <step>.
 func NumRange(start int, end int, step int) (numberrange []int) {
+		if step <= 0 || end < start {
+		return numberrange
+	}
 	for x := start; x <= end; x = x + step {
 		numberrange = append(numberrange, x)
 	}
@@ -27,4 +30,12 @@ func SetDefault(defaultval int, confval int) int {
 		return defaultval
 	}
 	return confval
+}
+// Returns the given values without changes, if condition == FALSE.
+// Returns the values in switched order, if condition == TRUE.
+func SwitchIf(condition bool, i1, i2 int) (int, int) {
+	if condition {
+		return i2, i1
+	}
+	return i1, i2
 }
