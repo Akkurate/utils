@@ -64,6 +64,7 @@ func ContainsIgnorecase(slice []string, s string) bool {
 	}
 	return false
 }
+
 // Removes the first occurence of given string from a slice.
 func Remove(slice []string, s string) []string {
 	for i, v := range slice {
@@ -100,6 +101,7 @@ func CleanUp(str string) string {
 	return str
 
 }
+
 // Returns the given values without changes, if condition == FALSE.
 // Returns the values in switched order, if condition == TRUE.
 func SwitchIf(condition bool, i1, i2 string) (string, string) {
@@ -107,4 +109,12 @@ func SwitchIf(condition bool, i1, i2 string) (string, string) {
 		return i2, i1
 	}
 	return i1, i2
+}
+
+// Returns i1 if condition == TRUE, else returns i2
+func Select(condition bool, i1, i2 string) string {
+	if condition {
+		return i1
+	}
+	return i2
 }

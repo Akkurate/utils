@@ -32,6 +32,13 @@ func SwitchIf(condition bool, i1, i2 float64) (float64, float64) {
 	}
 	return i1, i2
 }
+// Returns i1 if condition == TRUE, else returns i2
+func Select(condition bool, i1, i2 float64) float64 {
+	if condition {
+		return i1
+	}
+	return i2
+}
 
 // Checks if two slices are equal, element-wise. NaN and Inf are also handled.
 func IsEqualSlice(s1, s2 []float64) bool {

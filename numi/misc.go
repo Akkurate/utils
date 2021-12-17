@@ -1,4 +1,3 @@
-
 package numi
 
 import (
@@ -8,7 +7,7 @@ import (
 
 // Returns an evenly spaced slice of integers, between <start> and <end> with spacing <step>.
 func NumRange(start int, end int, step int) (numberrange []int) {
-		if step <= 0 || end < start {
+	if step <= 0 || end < start {
 		return numberrange
 	}
 	for x := start; x <= end; x = x + step {
@@ -31,6 +30,7 @@ func SetDefault(defaultval int, confval int) int {
 	}
 	return confval
 }
+
 // Returns the given values without changes, if condition == FALSE.
 // Returns the values in switched order, if condition == TRUE.
 func SwitchIf(condition bool, i1, i2 int) (int, int) {
@@ -38,4 +38,12 @@ func SwitchIf(condition bool, i1, i2 int) (int, int) {
 		return i2, i1
 	}
 	return i1, i2
+}
+
+// Returns i1 if condition == TRUE, else returns i2
+func Select(condition bool, i1, i2 int) int {
+	if condition {
+		return i1
+	}
+	return i2
 }
