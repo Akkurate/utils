@@ -3,6 +3,8 @@ package numf
 import (
 	"math"
 	"strings"
+
+	"github.com/Akkurate/utils/numi"
 )
 
 // Checks whether the given float is a valid number instead of NaN or Inf.
@@ -65,13 +67,15 @@ func DropNan(slice []float64) []float64 {
 //  "linear"   // fills the NaNs with linear interpolation
 // Filling starts from first valid value, thus leaving any preceding NaNs untouched. By setting prefill = true, first valid value is used to replace also the preceding NaNs.
 //
-// One sample's lifetime can be set by setting validTime value to > 1. Filling is then performed for validTime samples. Using validTime overrides prefill = true -setting
+// One sample's lifetime can be set by setting validTime value to > 0. Filling is then performed for validTime samples. Using validTime overrides prefill = true -setting
 func FillNan(slice []float64, method string, prefill bool, validTime int) []float64 {
 
 	method = strings.ToLower(method)
 	res := make([]float64, len(slice))
-	firstvalue := math.NaN()
+	firstvalue := slice[0]
 	dropped := DropNan(slice)
+	validTime = numi.Select(validTime == 0, len(slice), validTime)
+	vt := -1
 
 	if len(dropped) == 0 {
 		return slice
@@ -87,13 +91,17 @@ func FillNan(slice []float64, method string, prefill bool, validTime int) []floa
 
 		for i, v := range slice {
 			if math.IsNaN(v) {
+				vt++
 				if i == 0 {
 					res[i] = firstvalue
+				} else if vt >= validTime {
+					res[i] = v
 				} else {
 					res[i] = res[i-1]
 				}
 			} else {
 				res[i] = v
+				vt = 0
 			}
 		}
 
@@ -102,48 +110,41 @@ func FillNan(slice []float64, method string, prefill bool, validTime int) []floa
 		var idx []int
 		var val []float64
 
-		linearresult := slice
+		res = slice
+		res[0] = firstvalue
 
-		for i, v := range slice {
+		for i, v := range res {
 			if !math.IsNaN(v) {
 				idx = append(idx, i)
 				val = append(val, v)
 			}
 		}
+		idx = append(idx, len(res))
+		val = append(val, val[len(val)-1])
+		res = append(res, math.NaN())
 
 		for i := 0; i < len(val)-1; i++ {
+			vt = 0
+			gapsize := float64(idx[i+1] - idx[i])
+			gapdelta := val[i+1] - val[i]
 
-			gap := idx[i+1] - idx[i]
-			gapval := val[i+1] - val[i]
-
-			if gap > 1 {
-				step := gapval / float64(gap)
+			if gapsize > 1 {
+				linstep := gapdelta / gapsize
 				for j := idx[i]; j < idx[i+1]; j++ {
-					linearresult[j+1] = linearresult[j] + step
-				}
-			}
-		}
-		res = FillNan(linearresult, "previous", prefill, validTime)
-	default:
-		return res
-
-	}
-	if validTime > 1 {
-		filterRes := NanSlice(len(slice))
-		for i, v := range slice {
-			if !math.IsNaN(v) {
-				for j := i; j < i+validTime; j++ {
-					if j < len(slice) {
-						filterRes[j] = v
+					vt++
+					if vt >= validTime {
+						res[j+1] = math.NaN()
+					} else {
+						res[j+1] = res[j] + linstep
 					}
 				}
 			}
 		}
-		for i, v := range filterRes {
-			if math.IsNaN(v) {
-				res[i] = v
-			}
-		}
+		res = res[:len(res)-1]
+	default:
+		return res
+
 	}
+
 	return res
 }

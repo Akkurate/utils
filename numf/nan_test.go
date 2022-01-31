@@ -1,6 +1,7 @@
 package numf
 
 import (
+	"fmt"
 	"math"
 	"testing"
 
@@ -30,22 +31,34 @@ func TestNans(t *testing.T) {
 }
 
 func TestFillnan(t *testing.T) {
-	v := []float64{math.NaN(), 0, 1, 2, math.NaN(), 4, math.NaN()}
-	rprev := []float64{math.NaN(), 0, 1, 2, 2, 4, 4}
-	rlin := []float64{math.NaN(), 0, 1, 2, 3, 4, 4}
+
+	nan := math.NaN()
+	v := []float64{nan, 0, 1, 2, nan, 4, nan, nan}
+	rprev := []float64{nan, 0, 1, 2, 2, 4, 4, 4}
+	rlin := []float64{nan, 0, 1, 2, 3, 4, 4, 4}
 
 	resp := FillNan(v, "previous", false, 0)
 	assert.Equal(t, true, IsEqualSlice(rprev, resp))
+
 	resp = FillNan(v, "linear", false, 0)
-	assert.Equal(t, true, IsEqualSlice(rlin, resp))
+	assert.Equal(t, true, IsEqualSlice(rlin, resp), fmt.Sprintf("resp %v != %v", resp, rlin))
+
 	resp = FillNan(v, "linear", true, 0)
-	assert.Equal(t, true, IsEqualSlice(ReplaceNans(rlin, 0), resp))
+	assert.Equal(t, true, IsEqualSlice(ReplaceNans(rlin, 0), resp), fmt.Sprintf("resp %v != %v", resp, ReplaceNans(rlin, 0)))
 
 	long := NanSlice(20)
 	long[5] = 1
 	long[16] = 2
-	resp = FillNan(long,"previous",true,5)
-	n:=math.NaN()
-	expected := []float64{n,n,n,n,n,1,1,1,1,1,n,n,n,n,n,n,2,2,2,2}
-	assert.Equal(t, true, IsEqualSlice(expected,resp))
+
+	resp = FillNan(long, "previous", false, 5)
+	expected := []float64{nan, nan, nan, nan, nan, 1, 1, 1, 1, 1, nan, nan, nan, nan, nan, nan, 2, 2, 2, 2}
+	assert.Equal(t, true, IsEqualSlice(expected, resp), fmt.Sprintf("resp %v != %v", resp, expected))
+
+	resp = FillNan(long, "previous", true, 5)
+	expected = []float64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nan, nan, nan, nan, nan, nan, 2, 2, 2, 2}
+	assert.Equal(t, true, IsEqualSlice(expected, resp), fmt.Sprintf("resp %v != %v", resp, expected))
+
+	resp = FillNan(long, "previous", true, 2)
+	expected = []float64{1, 1, nan, nan, nan, 1, 1, nan, nan, nan, nan, nan, nan, nan, nan, nan, 2, 2, nan, nan}
+	assert.Equal(t, true, IsEqualSlice(expected, resp), fmt.Sprintf("resp %v != %v", resp, expected))
 }
