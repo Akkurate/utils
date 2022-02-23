@@ -35,7 +35,7 @@ func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded 
 			sign = "-"
 		}
 		if prettyvalue == 0 {
-			resp.Prettyresponse = fmt.Sprintf("is under %v0.1 %v%v", sign, prf, unit)
+			resp.Prettyresponse = fmt.Sprintf("under %v0.1 %v%v", sign, prf, unit)
 		} else {
 			resp.Prettyresponse = fmt.Sprintf("%v %v%v", prettyvalue, prf, unit)
 		}
