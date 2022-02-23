@@ -35,3 +35,11 @@ func TestSwitchIf(t *testing.T) {
 	assert.Equal(t, 1, a)
 	assert.Equal(t, 2, b)
 }
+
+func TestReplaceNil(t *testing.T) {
+	var i *int
+	resp := ReplaceNil(-1,i)
+	assert.Equal(t, -1, resp)
+
+
+}

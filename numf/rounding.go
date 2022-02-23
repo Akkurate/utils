@@ -10,10 +10,12 @@ import (
 )
 
 type Rounded struct {
-	Rawvalue float64 // raw value with given digits but no prefix
-	Prefix   string  // prefix string
-	Value    float64 // rounded value with given digits and prefix
-	Response string  // response string as <Value> <Prefix><unit>
+	Rawvalue       float64 // raw value with given digits but no prefix
+	Prefix         string  // prefix string
+	Value          float64 // rounded value with given digits and prefix
+	Response       string  // response string as <Value> <Prefix><unit>
+	Prettyvalue    float64 // rounded value with one decimal
+	Prettyresponse string  // response string as <Value> <Prefix><unit> ; if value is <0.1 , shows "less than 0.1"
 }
 
 // Returns the rounded value to given digits and correct prefix (M for Megas, k for Kilos etc.)
@@ -22,17 +24,28 @@ type Rounded struct {
 // These units are excluded from having a prefix
 //  noprefixUnits := []string{"%", "cycles", "years", "°c", "°lon", "°lat", "events", "", " "}
 func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded {
-
+	// initialize response
+	resp := Rounded{
+		Rawvalue: RoundTo(v, digits),
+	}
+	doResponses := func(value, prettyvalue float64, prf string) {
+		resp.Response = fmt.Sprintf("%v %v%v", value, prf, unit)
+		var sign string
+		if value < 0 {
+			sign = "-"
+		}
+		if prettyvalue == 0 {
+			resp.Prettyresponse = fmt.Sprintf("is under %v0.1 %v%v", sign, prf, unit)
+		} else {
+			resp.Prettyresponse = fmt.Sprintf("%v %v%v", prettyvalue, prf, unit)
+		}
+	}
 	lowercaseunit := strings.ToLower(unit) // force lowercase
 
 	prefixes := []string{"G", "M", "k", "m", "u", "n"}
 	powers := []float64{1e9, 1e6, 1e3, 1e-3, 1e-6, 1e-9}
 	noprefixUnits := []string{"%", "cycles", "years", "°c", "°lon", "°lat", "events", "", " "}
 
-	// initialize response
-	resp := Rounded{
-		Rawvalue: RoundTo(v, digits),
-	}
 	setprefix := true
 	// no prefix if noprefixUnit given
 	if str.Contains(noprefixUnits, lowercaseunit) {
@@ -44,14 +57,16 @@ func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded 
 		prefixpos, _ := str.FindIndex(prefixes, prefix)
 		if prefixpos >= 0 {
 			resp.Value = RoundTo(v/powers[prefixpos], digits)
-			resp.Response = fmt.Sprintf("%v %v%v", resp.Prefix, resp.Value, unit)
+			resp.Prettyvalue = math.Round(10*resp.Value) / 10
+			doResponses(resp.Value, resp.Prettyvalue, prefix)
 			return resp
 		}
 
 		resp.Prefix = ""
 		if math.Abs(v) >= 0.01 && math.Abs(v) <= 9999 {
 			resp.Value = RoundTo(v, digits)
-			resp.Response = fmt.Sprintf("%v %v%v", resp.Value, resp.Prefix, unit)
+			resp.Prettyvalue = math.Round(10*resp.Value) / 10
+			doResponses(resp.Value, resp.Prettyvalue, resp.Prefix)
 			return resp
 		}
 
@@ -59,14 +74,17 @@ func RoundWithPrefix(v float64, digits int, unit string, prefix string) Rounded 
 			if math.Abs(v) >= powers[i] {
 				resp.Prefix = p
 				resp.Value = RoundTo(v/powers[i], digits)
-				resp.Response = fmt.Sprintf("%v %v%v", resp.Value, resp.Prefix, unit)
+				resp.Prettyvalue = math.Round(10*resp.Value) / 10
+				doResponses(resp.Value, resp.Prettyvalue, resp.Prefix)
 				return resp
 			}
 		}
 	}
 
 	resp.Value = RoundTo(v, digits)
-	resp.Response = fmt.Sprintf("%v %v%v", resp.Value, resp.Prefix, unit)
+	resp.Prettyvalue = math.Round(10*resp.Value) / 10
+	doResponses(resp.Value, resp.Prettyvalue, prefix)
+
 	return resp
 
 }

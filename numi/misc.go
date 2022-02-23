@@ -47,3 +47,11 @@ func Select(condition bool, i1, i2 int) int {
 	}
 	return i2
 }
+
+// Replaces nil valued *int with given integer
+func ReplaceNil(val int, i *int) int {
+	if i == nil {
+		return val
+	}
+	return *i
+}
