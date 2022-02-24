@@ -69,7 +69,9 @@ func DropNan(slice []float64) []float64 {
 //
 // One sample's lifetime can be set by setting validTime value to > 0. Filling is then performed for validTime samples. Using validTime overrides prefill = true -setting
 func FillNan(slice []float64, method string, prefill bool, validTime int) []float64 {
-
+	if len(slice) == 0 {
+		return slice
+	}
 	method = strings.ToLower(method)
 	res := make([]float64, len(slice))
 	firstvalue := slice[0]
