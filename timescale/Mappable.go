@@ -10,6 +10,12 @@ import (
 )
 
 var floatType = reflect.TypeOf(float64(0))
+var floatsType = reflect.TypeOf([]float64{})
+
+// Value struct contains the Raw data of unknown type
+type Value struct {
+	Raw interface{}
+}
 
 func getFloat(unk interface{}) (float64, error) {
 	v := reflect.ValueOf(unk)
@@ -21,17 +27,12 @@ func getFloat(unk interface{}) (float64, error) {
 	return fv.Float(), nil
 }
 
-// Value Value
-type Value struct {
-	Raw interface{}
-}
-
-// AsString AsString
+// Returns raw value as string
 func (v *Value) AsString() string {
 	return fmt.Sprint(v.Raw)
 }
 
-// AsFloat AsFloat
+// Returns raw value as float64. Returns NaN if no value.
 func (v *Value) AsFloat() float64 {
 	if v.Raw == nil {
 		return math.NaN()
@@ -40,7 +41,7 @@ func (v *Value) AsFloat() float64 {
 	return f
 }
 
-// AsInt AsInt
+// Returns raw value as int. Returns 0 if no value.
 func (v *Value) AsInt() int {
 	if v.Raw == nil {
 		return 0
@@ -48,6 +49,15 @@ func (v *Value) AsInt() int {
 	return v.Raw.(int)
 }
 
+// Returns raw value as int64. Returns 0 if no value.
+func (v *Value) AsInt64() int64 {
+	if v.Raw == nil {
+		return 0
+	}
+	return v.Raw.(int64)
+}
+
+// Returns raw binary value as int. Returns 0 if no value.
 func (v *Value) BinaryToInt() int {
 	if v.Raw == nil {
 		return 0
@@ -59,67 +69,43 @@ func (v *Value) BinaryToInt() int {
 	return int(u32LE)
 }
 
-//
-
-// AsInt64 AsInt64
-func (v *Value) AsInt64() int64 {
-	if v.Raw == nil {
-		return 0
-	}
-	return v.Raw.(int64)
-}
-
-// AsTime AsTime
+// Returns raw value as time.Time
 func (v *Value) AsTime() time.Time {
 	return v.Raw.(time.Time)
 }
 
-// AsBool AsBool
+// Returns raw value as boolean.
 func (v *Value) AsBool() bool {
 	return v.Raw.(bool)
 }
 
-// AsBool AsBool
+// Returns raw value as interface.
 func (v *Value) AsInterface() interface{} {
 	return v.Raw
 }
 
-// AsBool AsBool
+// Returns raw value as byte.
 func (v *Value) AsByte() []byte {
 	return v.Raw.([]byte)
 }
 
-// AsBool AsBool
+// Unmarshals JSON to target.
 func (v *Value) AsJSON(target interface{}) {
 	b := v.Raw.([]byte)
 	json.Unmarshal(b, target)
 }
 
-// Row Row
-type Row struct {
-	Data map[string]interface{}
-}
-
-// Get Get
-func (r *Row) Get(field string) *Value {
-	v, e := r.Data[field]
-	if !e {
+func (v *Value) AsFloats() []float64 {
+	unk := reflect.ValueOf(v.Raw)
+	unk = reflect.Indirect(unk)
+	if !unk.Type().ConvertibleTo(floatsType) {
 		return nil
 	}
-	if v == nil {
-		return nil
-	}
-	return &Value{Raw: v}
-}
+	f := unk.Convert(floatsType)
 
-// Get Get
-func (r *Row) GetDefault(field string, defaultValue interface{}) *Value {
-	v, e := r.Data[field]
-	if !e {
-		return &Value{Raw: defaultValue}
+	res := make([]float64, f.Len())
+	for i := 0; i < f.Len(); i++ {
+		res[i] = f.Index(i).Float()
 	}
-	if v == nil {
-		return &Value{Raw: defaultValue}
-	}
-	return &Value{Raw: v}
+	return res
 }
