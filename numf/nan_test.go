@@ -27,11 +27,11 @@ func TestNans(t *testing.T) {
 	assert.Equal(t, 0, len(nanslice))
 	nanslice = DropNan(vals)
 	assert.Equal(t, []float64{0, 1, -1}, nanslice)
-
+	DropNanInplace(&vals)
+	assert.Equal(t, []float64{0, 1, -1}, vals)
 }
 
 func TestFillnan(t *testing.T) {
-
 	nan := math.NaN()
 	v := []float64{nan, 0, 1, 2, nan, 4, nan, nan}
 	rprev := []float64{nan, 0, 1, 2, 2, 4, 4, 4}

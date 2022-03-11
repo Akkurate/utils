@@ -50,7 +50,6 @@ func NanSlice(size int) (nanslice []float64) {
 
 // Drops NaNs from a slice.
 func DropNan(slice []float64) []float64 {
-
 	res := make([]float64, len(slice))
 	i := 0
 	for _, v := range slice {
@@ -61,19 +60,19 @@ func DropNan(slice []float64) []float64 {
 	}
 	return res[:i]
 }
-// Drops NaNs from a slice in place. This is more memory efficient way than using DropNan.
-// NOTE: Reuses given input slice's memory space so it's not safe to use afterwards.
-func DropNanInplace(slice []float64) []float64 {
 
+// Drops NaNs from a slice in place. This is more memory efficient way than using DropNan.
+func DropNanInplace(slice *[]float64) {
 	i := 0
-	for _, v := range slice {
+	for _, v := range *slice {
 		if IsValid(v) {
-			slice[i] = v
+			(*slice)[i] = v
 			i++
 		}
 	}
-	return slice[:i]
+	*slice = (*slice)[:i]
 }
+
 // Fills NaN values with a value based on given method:
 //  "previous" // fills the NaNs with previous value
 //  "linear"   // fills the NaNs with linear interpolation
