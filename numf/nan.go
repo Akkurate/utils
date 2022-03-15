@@ -26,7 +26,7 @@ func ReplaceNan(value float64, replacewith float64) float64 {
 	return replacewith
 }
 
-// Replaces all NaNs in a slice with given value.
+// Replaces all NaNs in a slice with given value and returns a new slice.
 func ReplaceNans(values []float64, replacewith float64) []float64 {
 	res := make([]float64, len(values))
 	for i, v := range values {
@@ -39,6 +39,17 @@ func ReplaceNans(values []float64, replacewith float64) []float64 {
 	return res
 }
 
+// Replaces all NaNs in a slice in place with given value.
+func ReplaceNansInplace(values *[]float64, replacewith float64)  {
+
+	for i, v := range *values {
+		if !IsValid(v) {
+			(*values)[i] = replacewith
+		} 
+	}
+
+}
+
 // Creates a slice of NaNs of given size.
 func NanSlice(size int) (nanslice []float64) {
 	nanslice = make([]float64, size)
@@ -48,7 +59,7 @@ func NanSlice(size int) (nanslice []float64) {
 	return nanslice
 }
 
-// Drops NaNs from a slice.
+// Creates a new slice from given input slice without NaNs
 func DropNan(slice []float64) []float64 {
 	res := make([]float64, len(slice))
 	i := 0
@@ -61,7 +72,7 @@ func DropNan(slice []float64) []float64 {
 	return res[:i]
 }
 
-// Drops NaNs from a slice in place. This is more memory efficient way than using DropNan.
+// Drops NaNs from a slice in place. 
 func DropNanInplace(slice *[]float64) {
 	i := 0
 	for _, v := range *slice {
@@ -162,7 +173,7 @@ func FillNan(slice []float64, method string, prefill bool, validTime int) []floa
 	return res
 }
 
-// Fills NaN values with a value based on given method:
+// Fills NaN values inplace with a value based on given method:
 //  "previous" // fills the NaNs with previous value
 //  "linear"   // fills the NaNs with linear interpolation
 // Filling starts from first valid value, thus leaving any preceding NaNs untouched. By setting prefill = true, first valid value is used to replace also the preceding NaNs.
