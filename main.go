@@ -6,12 +6,12 @@ import (
 )
 
 // Routes Routes
-type Routes struct {
-}
+type Routes struct{}
 
 func (r *Routes) helloWorld() map[string]string {
 	return map[string]string{"hello": "world"}
 }
+
 func (r *Routes) RouteIndex(c *apiserver.Context) {
 	logging.Info("coming in here")
 	a := r.helloWorld()
