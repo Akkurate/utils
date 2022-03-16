@@ -34,6 +34,19 @@ func SetLevel(l int) {
 	LoggingLevel = l
 }
 
+// Dirty always prints everything including special characters, and does not add anything extra to the print. 
+// Should be used only for local printing!
+func Dirty(msg string, a ...interface{}) {
+
+	var s string
+	if len(a) == 0 {
+		s = color.Sprintf(msg)
+	} else {
+		s = color.Sprintf(msg, a...)
+	}
+	os.Stdout.Write([]byte(s))
+}
+
 // Info Info
 func Info(msg string, a ...interface{}) {
 
