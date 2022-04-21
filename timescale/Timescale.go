@@ -18,7 +18,7 @@ import (
 
 var debug = system.GetEnvOrDefault("QUERY_DEBUG", "") == "1"
 
-// Timescale parameters. 
+// Timescale parameters.
 type Timescale struct {
 	uri            string
 	DB             *sqlx.DB
@@ -27,20 +27,23 @@ type Timescale struct {
 	sync.Mutex
 }
 
-
-// New Timescale connection. 
-func New(uri string) *Timescale {
-	ts := &Timescale{
+// New Timescale connection.
+func New(uri string) (timescale *Timescale) {
+	timescale = &Timescale{
 		uri:            uri,
 		MaxConnections: 50, // hardcoded for now
 	}
-	ts.Connect()
-	return ts
+	err := timescale.Connect()
+	if err != nil {
+		timescale.Error = fmt.Sprintf("%v", err)
+		logging.Error("%v", err)
+	}
+	return timescale
 }
 
 // Connect to Timescale. SSL is set as disabled and hostname is used as the application name. In case of not being able to connect, Error string is updated.
-func (ts *Timescale) Connect() {
-	
+func (ts *Timescale) Connect() (err error) {
+
 	hostname, _ := os.Hostname()
 	a := strings.Index(ts.uri, "?sslmode=disable")
 	if a == -1 {
@@ -50,7 +53,7 @@ func (ts *Timescale) Connect() {
 	logging.Info("<cyan>** Connecting to Timescale</> <gray>%v</>", ts.uri)
 
 	var db *sqlx.DB
-	var err error
+
 	maxRetries := 3
 	for retry := 0; retry < maxRetries; retry++ {
 		db, err = sqlx.Connect("postgres", ts.uri)
@@ -64,13 +67,13 @@ func (ts *Timescale) Connect() {
 	}
 
 	if err != nil {
-		ts.Error = fmt.Sprintf("%v", err)
-		logging.Error("%v", err)
-		return
+		return err
 	}
 
 	db.SetMaxOpenConns(ts.MaxConnections)
 	ts.DB = db
+
+	return err
 }
 
 // Close connection.
