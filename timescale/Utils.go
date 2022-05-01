@@ -41,7 +41,7 @@ func CastType(iface interface{}) string {
 	switch iface.(type) {
 
 	case time.Time:
-		return fmt.Sprintf(`'%v'`, iface.(time.Time).Format("2006-01-02T15:04:05"))
+		return fmt.Sprintf(`'%v'`, iface.(time.Time).Format("2006-01-02T15:04:05.000000"))
 	}
 	return fmt.Sprintf(`%v`, iface)
 }
