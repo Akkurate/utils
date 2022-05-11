@@ -1,6 +1,8 @@
 package system
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -55,4 +57,21 @@ func isInSlice(args ...interface{}) bool {
 		}
 	}
 	return false
+}
+
+// Load data from file to buffer via io.Copy (more efficient). Output can be converted to string or bytes.
+//  data.String() // for writing SQL etc.
+//  data.Bytes()  // for JSON unmarshaling
+func ReadBuffer(file string) (data *bytes.Buffer, err error) {
+	var buf bytes.Buffer
+	f, err := os.Open(file)
+
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	_, err = io.Copy(&buf, f)
+
+	return &buf, err
 }
