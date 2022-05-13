@@ -50,7 +50,6 @@ func (ts *Timescale) Connect() (err error) {
 		ts.uri = fmt.Sprintf("%v?sslmode=disable", ts.uri)
 	}
 	ts.uri = fmt.Sprintf("%v&fallback_application_name=%v", ts.uri, hostname)
-	logging.Info("<cyan>** Connecting to Timescale</> <gray>%v</>", ts.uri)
 
 	var db *sqlx.DB
 
