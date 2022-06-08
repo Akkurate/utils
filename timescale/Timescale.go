@@ -3,10 +3,10 @@ package timescale
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/Akkurate/utils/logging"
 	"github.com/Akkurate/utils/system"
@@ -31,7 +31,7 @@ type Timescale struct {
 func New(uri string) (timescale *Timescale) {
 	timescale = &Timescale{
 		uri:            uri,
-		MaxConnections: 50, // hardcoded for now
+		MaxConnections: 0, // hardcoded for now
 	}
 	err := timescale.Connect()
 	if err != nil {
@@ -53,25 +53,29 @@ func (ts *Timescale) Connect() (err error) {
 
 	var db *sqlx.DB
 
-	maxRetries := 3
-	for retry := 0; retry < maxRetries; retry++ {
-		db, err = sqlx.Connect("postgres", ts.uri)
+	// maxRetries := 3
+	// for retry := 0; retry < maxRetries; retry++ {
+	// 	db, err = sqlx.Connect("postgres", ts.uri)
 
-		if err != nil {
-			logging.Warn("<cyan>** Couldn't connect to Timescale. Retrying in 10 seconds...</>")
-			time.Sleep(10 * time.Second)
-		} else {
-			break
-		}
+	// 	if err != nil {
+	// 		logging.Warn("<cyan>** Couldn't connect to Timescale. Retrying in 10 seconds...</>")
+	// 		time.Sleep(10 * time.Second)
+	// 	} else {
+	// 		break
+	// 	}
+	// }
+
+	// if err != nil {
+	// 	return err
+	// }
+	logging.Warn("[%v] %v - Connecting to Timescale...", hostname, time.Now())
+	db, err = sqlx.Connect("postgres", ts.uri)
+	if err == nil {
+		// db.SetMaxOpenConns(ts.MaxConnections)
+		ts.DB = db
+	} else {
+		logging.Warn("[%v] %v - Connecting to Timescale...Failed.", hostname, time.Now())
 	}
-
-	if err != nil {
-		return err
-	}
-
-	db.SetMaxOpenConns(ts.MaxConnections)
-	ts.DB = db
-
 	return err
 }
 
